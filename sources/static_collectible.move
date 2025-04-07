@@ -1,5 +1,6 @@
 module dos_static_collectible::static_collectible;
 
+use cascade_protocol::mint_cap::MintCap;
 use std::string::String;
 use sui::hash::blake2b256;
 use sui::hex;
@@ -35,12 +36,15 @@ const ECollectibleNotRevealed: u64 = 3;
 // you can use the Walrus CLI to pre-calculate blob IDs to use as image URIs.
 // The actual image can be uploaded at a later time.
 public fun new(
+    cap: MintCap<StaticCollectible>,
     name: String,
     number: u64,
     description: String,
     external_url: String,
     provenance_hash: String,
 ): StaticCollectible {
+    cap.destroy();
+
     StaticCollectible {
         number: number,
         name: name,
