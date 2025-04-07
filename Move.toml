@@ -5,7 +5,7 @@ license = "Cascade DOL"
 authors = ["Cascade Foundation (dev@cascade.foundation)"]
 
 [dependencies]
-CascadeProtocol = { git = "https://github.com/cascadefoundation/cascade_protocol.git", rev = "main" }
+CascadeProtocol = { git = "https://github.com/cascadefoundation/cascade_protocol.git", rev = "testnet" }
 
 [addresses]
 dos_static_collectible = "0x0"
