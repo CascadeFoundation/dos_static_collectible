@@ -2,7 +2,7 @@
 
 [move]
 version = 3
-manifest_digest = "4D2B343749411F61F86DA8A4EC569692C3545EE822DA6082A89C92FE31CE8AD3"
+manifest_digest = "6924FC5823433AC63D99092CEA42420DAAA4F9D901A45A7E1CA84C953FE32D06"
 deps_digest = "52B406A7A21811BEF51751CF88DA0E76DAEFFEAC888D4F4060B1A72BBE7D8D35"
 dependencies = [
   { id = "Bridge", name = "Bridge" },
@@ -25,7 +25,7 @@ dependencies = [
 
 [[move.package]]
 id = "CascadeProtocol"
-source = { git = "https://github.com/cascadefoundation/cascade_protocol.git", rev = "testnet", subdir = "" }
+source = { git = "https://github.com/cascadefoundation/cascade_protocol.git", rev = "testnet", subdir = "package" }
 
 dependencies = [
   { id = "Bridge", name = "Bridge" },
@@ -74,6 +74,6 @@ flavor = "sui"
 
 [env.testnet]
 chain-id = "4c78adac"
-original-published-id = "0x49b960fa82cd4407776eddf6a32cf9311152812ed7a64c013b86628ddbf7730c"
-latest-published-id = "0x49b960fa82cd4407776eddf6a32cf9311152812ed7a64c013b86628ddbf7730c"
+original-published-id = "0x32036dea87cb031455daa2b57391d22057a8dd88d51b821bff2cf4aee7edf7c3"
+latest-published-id = "0x32036dea87cb031455daa2b57391d22057a8dd88d51b821bff2cf4aee7edf7c3"
 published-version = "1"
