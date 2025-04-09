@@ -14,6 +14,14 @@ public struct StaticCollectible has store {
     reveal_state: RevealState,
 }
 
+public struct StaticTypedCollectible<phantom T> has key, store {
+    id: UID,
+    name: String,
+    description: String,
+    external_url: String,
+    reveal_state: RevealState,
+}
+
 public enum RevealState has copy, drop, store {
     UNREVEALED {
         provenance_hash: String,
