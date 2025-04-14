@@ -1,6 +1,5 @@
 module dos_static_collectible::static_collectible;
 
-use cascade_protocol::mint_cap::MintCap;
 use std::string::String;
 use sui::vec_map::{Self, VecMap};
 
@@ -23,7 +22,6 @@ const EAttributesLengthMismatch: u64 = 10000;
 // you can use the Walrus CLI to pre-calculate blob IDs to use as image URIs.
 // The actual image can be uploaded to Walrus at a later time.
 public fun new(
-    cap: MintCap<StaticCollectible>,
     name: String,
     number: u64,
     description: String,
@@ -31,8 +29,6 @@ public fun new(
     animation_url: String,
     external_url: String,
 ): StaticCollectible {
-    cap.destroy();
-
     StaticCollectible {
         number: number,
         name: name,
