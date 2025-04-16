@@ -8,10 +8,10 @@ use sui::vec_map::{Self, VecMap};
 //=== Structs ===
 
 public struct StaticCollectible has store {
-    parent_type: TypeName,
     number: u64,
     name: String,
     description: String,
+    parent_type: TypeName,
     attributes: VecMap<String, String>,
     image: String,
     animation_url: String,
@@ -59,10 +59,10 @@ public fun new(
     parent_type: TypeName,
 ): StaticCollectible {
     let collectible = StaticCollectible {
-        parent_type: parent_type,
         number: number,
         name: name,
         description: description,
+        parent_type: parent_type,
         image: image,
         animation_url: animation_url,
         external_url: external_url,
