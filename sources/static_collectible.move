@@ -1,7 +1,7 @@
 module dos_static_collectible::static_collectible;
 
 use std::string::String;
-use std::type_name::{Self, TypeName};
+use std::type_name::TypeName;
 use sui::event::emit;
 use sui::vec_map::{Self, VecMap};
 
@@ -49,16 +49,17 @@ const EAttributesLengthMismatch: u64 = 10000;
 // without revealing the image. For example, if you're using Walrus for image storage,
 // you can use the Walrus CLI to pre-calculate blob IDs to use as image URIs.
 // The actual image can be uploaded to Walrus at a later time.
-public fun new<T>(
+public fun new(
     name: String,
     number: u64,
     description: String,
     image: String,
     animation_url: String,
     external_url: String,
+    parent_type: TypeName,
 ): StaticCollectible {
     let collectible = StaticCollectible {
-        parent_type: type_name::get<T>(),
+        parent_type: parent_type,
         number: number,
         name: name,
         description: description,
