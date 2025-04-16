@@ -7,7 +7,8 @@ use sui::vec_map::{Self, VecMap};
 
 //=== Structs ===
 
-public struct StaticCollectible<phantom T> has store {
+public struct StaticCollectible has store {
+    parent_type: TypeName,
     number: u64,
     name: String,
     description: String,
@@ -20,17 +21,17 @@ public struct StaticCollectible<phantom T> has store {
 //=== Events ===
 
 public struct StaticCollectibleCreatedEvent has copy, drop {
-    collectible_type: TypeName,
+    parent_type: TypeName,
     collectible_number: u64,
 }
 
 public struct StaticCollectibleDestroyedEvent has copy, drop {
-    collectible_type: TypeName,
+    parent_type: TypeName,
     collectible_number: u64,
 }
 
 public struct StaticCollectibleRevealedEvent has copy, drop {
-    collectible_type: TypeName,
+    parent_type: TypeName,
     collectible_number: u64,
     attribute_keys: vector<String>,
     attribute_values: vector<String>,
@@ -42,7 +43,7 @@ const EAttributesLengthMismatch: u64 = 10000;
 
 //=== Public Functions ===
 
-// Create a new static StaticCollectible<T>.
+// Create a new static StaticCollectible.
 //
 // The `image` is specified upfront because it can be calculated ahead of time
 // without revealing the image. For example, if you're using Walrus for image storage,
@@ -55,8 +56,9 @@ public fun new<T>(
     image: String,
     animation_url: String,
     external_url: String,
-): StaticCollectible<T> {
-    let collectible = StaticCollectible<T> {
+): StaticCollectible {
+    let collectible = StaticCollectible {
+        parent_type: type_name::get<T>(),
         number: number,
         name: name,
         description: description,
@@ -67,34 +69,35 @@ public fun new<T>(
     };
 
     emit(StaticCollectibleCreatedEvent {
-        collectible_type: type_name::get<T>(),
+        parent_type: collectible.parent_type,
         collectible_number: collectible.number,
     });
 
     collectible
 }
 
-public fun destroy<T>(self: StaticCollectible<T>) {
-    let StaticCollectible<T> {
+public fun destroy(self: StaticCollectible) {
+    let StaticCollectible {
+        parent_type,
         number,
         ..,
     } = self;
 
     emit(StaticCollectibleDestroyedEvent {
-        collectible_type: type_name::get<T>(),
+        parent_type: parent_type,
         collectible_number: number,
     });
 }
 
-public fun reveal<T>(
-    self: &mut StaticCollectible<T>,
+public fun reveal(
+    self: &mut StaticCollectible,
     attribute_keys: vector<String>,
     attribute_values: vector<String>,
 ) {
     assert!(attribute_keys.length() == attribute_values.length(), EAttributesLengthMismatch);
 
     emit(StaticCollectibleRevealedEvent {
-        collectible_type: type_name::get<T>(),
+        parent_type: self.parent_type,
         collectible_number: self.number,
         attribute_keys: attribute_keys,
         attribute_values: attribute_values,
@@ -103,30 +106,34 @@ public fun reveal<T>(
     self.attributes = vec_map::from_keys_values(attribute_keys, attribute_values);
 }
 
-public fun name<T>(self: &StaticCollectible<T>): String {
+public fun name(self: &StaticCollectible): String {
     self.name
 }
 
-public fun number<T>(self: &StaticCollectible<T>): u64 {
+public fun number(self: &StaticCollectible): u64 {
     self.number
 }
 
-public fun description<T>(self: &StaticCollectible<T>): String {
+public fun description(self: &StaticCollectible): String {
     self.description
 }
 
-public fun image<T>(self: &StaticCollectible<T>): String {
+public fun image(self: &StaticCollectible): String {
     self.image
 }
 
-public fun animation_url<T>(self: &StaticCollectible<T>): String {
+public fun animation_url(self: &StaticCollectible): String {
     self.animation_url
 }
 
-public fun external_url<T>(self: &StaticCollectible<T>): String {
+public fun external_url(self: &StaticCollectible): String {
     self.external_url
 }
 
-public fun attributes<T>(self: &StaticCollectible<T>): VecMap<String, String> {
+public fun attributes(self: &StaticCollectible): VecMap<String, String> {
     self.attributes
+}
+
+public fun parent_type(self: &StaticCollectible): TypeName {
+    self.parent_type
 }
