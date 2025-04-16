@@ -1,8 +1,9 @@
 module dos_static_collectible::static_collectible;
 
 use std::string::String;
-use std::type_name::TypeName;
+use std::type_name::{Self, TypeName};
 use sui::event::emit;
+use sui::package::Publisher;
 use sui::vec_map::{Self, VecMap};
 
 //=== Structs ===
@@ -39,7 +40,8 @@ public struct StaticCollectibleRevealedEvent has copy, drop {
 
 //=== Constants ===
 
-const EAttributesLengthMismatch: u64 = 10000;
+const EInvalidPublisher: u64 = 10000;
+const EAttributesLengthMismatch: u64 = 20000;
 
 //=== Public Functions ===
 
@@ -49,20 +51,23 @@ const EAttributesLengthMismatch: u64 = 10000;
 // without revealing the image. For example, if you're using Walrus for image storage,
 // you can use the Walrus CLI to pre-calculate blob IDs to use as image URIs.
 // The actual image can be uploaded to Walrus at a later time.
-public fun new(
+public fun new<T>(
+    publisher: &Publisher,
     name: String,
     number: u64,
     description: String,
     image: String,
     animation_url: String,
     external_url: String,
-    parent_type: TypeName,
 ): StaticCollectible {
+    // Verify the caller has authority to use this type by checking the Publisher.
+    assert!(publisher.from_module<T>(), EInvalidPublisher);
+
     let collectible = StaticCollectible {
         number: number,
         name: name,
         description: description,
-        parent_type: parent_type,
+        parent_type: type_name::get<T>(),
         image: image,
         animation_url: animation_url,
         external_url: external_url,
